@@ -1,0 +1,7 @@
+*** make sure to add config.env file and add you DATABASE URL ***
+
+! In This commit i will add the following:
+  1- adding pagination with pages and limit
+  2- adding AppError class and make application Errors
+  3- adding catchAsync.js to catch any exceptions in async functions.
+  
