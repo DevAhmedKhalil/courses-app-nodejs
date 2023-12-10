@@ -1,5 +1,5 @@
-const { validationResult } = require("express-validator");
 const Course = require("../models/course.model");
+const { validationResult } = require("express-validator");
 const HST = require("../utils/httpStatusText");
 const catchAsync = require("../middlewares/catchAsync");
 const AppError = require("../utils/appError");

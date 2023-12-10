@@ -1,29 +1,34 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const courseController = require("../controllers/courseControllers");
+const courseController = require('../controllers/courseControllers');
 const {
   validateNewCourse,
   validateUpdatedCourse,
-} = require("../middlewares/validationSchema");
+} = require('../middlewares/validationSchema');
+const verifyToken = require('../middlewares/verifyToken');
+const userRoles = require('../utils/userRoles');
+const allowedTo = require('../middlewares/allowedTo');
 
-//* CRUD operations
-//@ Create a new course {POST}
-router.post("/api/courses", validateNewCourse, courseController.createCourse);
+// Combine multiple HTTP methods on the same route '/'
+router
+  .route('/')
+  .get(courseController.getCourses)
+  .post(
+    verifyToken,
+    allowedTo(userRoles.MANAGER),
+    validateNewCourse,
+    courseController.createCourse
+  );
 
-//@ Read All Courses {GET}
-router.get("/api/courses", courseController.getCourses);
-
-//@ Read One Course {GET}
-router.get("/api/courses/:courseId", courseController.getCourse);
-
-//@ Update course {PATCH}
-router.patch(
-  "/api/courses/:courseId",
-  validateUpdatedCourse,
-  courseController.updateCourse
-);
-
-//@ Delete course {DELETE}
-router.delete("/api/courses/:courseId", courseController.deleteCourse);
+// Combine multiple HTTP methods on the same route '/:courseId'
+router
+  .route('/:courseId')
+  .get(courseController.getCourse)
+  .patch(validateUpdatedCourse, courseController.updateCourse)
+  .delete(
+    verifyToken,
+    allowedTo(userRoles.ADMIN, userRoles.MANAGER),
+    courseController.deleteCourse
+  );
 
 module.exports = router;
