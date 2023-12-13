@@ -15,7 +15,7 @@ router
   .get(courseController.getCourses)
   .post(
     verifyToken,
-    allowedTo(userRoles.MANAGER),
+    allowedTo(userRoles.MANAGER, userRoles.ADMIN),
     validateNewCourse,
     courseController.createCourse
   );
@@ -24,10 +24,15 @@ router
 router
   .route('/:courseId')
   .get(courseController.getCourse)
-  .patch(validateUpdatedCourse, courseController.updateCourse)
+  .patch(
+    validateUpdatedCourse,
+    verifyToken,
+    allowedTo(userRoles.MANAGER, userRoles.ADMIN),
+    courseController.updateCourse
+  )
   .delete(
     verifyToken,
-    allowedTo(userRoles.ADMIN, userRoles.MANAGER),
+    allowedTo(userRoles.MANAGER, userRoles.ADMIN),
     courseController.deleteCourse
   );
 

@@ -17,7 +17,7 @@ const verifyToken = (req, res, next) => {
   try {
     // Verify the token => decoded Token = Current User
     const currentUser = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log('Decoded Token = Current User:', currentUser);
+    // console.log('Decoded Token = Current User:', currentUser);
 
     // Attach the decoded/current user information to the request object
     req.currentUser = currentUser;

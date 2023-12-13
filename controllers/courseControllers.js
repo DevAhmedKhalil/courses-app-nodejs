@@ -1,8 +1,8 @@
-const Course = require("../models/course.model");
-const { validationResult } = require("express-validator");
-const HST = require("../utils/httpStatusText");
-const catchAsync = require("../middlewares/catchAsync");
-const AppError = require("../utils/appError");
+const Course = require('../models/course.model');
+const { validationResult } = require('express-validator');
+const HST = require('../utils/httpStatusText');
+const catchAsync = require('../middlewares/catchAsync');
+const AppError = require('../utils/appError');
 
 //* CRUD operations
 //^ Create a new course {POST}
@@ -43,7 +43,7 @@ const getCourse = catchAsync(async (req, res, next) => {
 
   if (!foundCourse) {
     // return res.status(404).json({ error: "Course not found" });
-    const err = AppError.create("course not found!", 404, HST.ERROR);
+    const err = AppError.create('course not found!', 404, HST.ERROR);
     return next(err);
   }
 
@@ -59,7 +59,7 @@ const updateCourse = catchAsync(async (req, res, next) => {
 
   if (!foundCourse) {
     // return res.status(404).json({ error: "Course not found!" });
-    const err = AppError.create("course not found!!", 404, HST.ERROR);
+    const err = AppError.create('course not found!!', 404, HST.ERROR);
     return next(err);
   }
 
@@ -73,7 +73,7 @@ const deleteCourse = catchAsync(async (req, res, next) => {
 
   if (!foundCourse) {
     // return res.status(404).json({ error: "not found ourse!!!" });
-    const err = AppError.create("course not found!!!", 404, HST.ERROR);
+    const err = AppError.create('course not found!!!', 404, HST.ERROR);
     return next(err);
   }
 

@@ -5,22 +5,7 @@ const HST = require('../utils/httpStatusText');
 const bcrypt = require('bcryptjs');
 const genereateJWT = require('../utils/generateJWT');
 
-//^ [GET] Read all users
-const getUsers = catchAsync(async (req, res, next) => {
-  const query = req.query;
-
-  const limit = query.limit || 10;
-  const page = query.page || 1;
-  const skip = (page - 1) * limit;
-
-  //# Get all users form DB user User model
-  const users = await User.find({}, { __V: false, password: false })
-    .limit(limit)
-    .skip(skip);
-
-  res.status(200).json(users);
-});
-
+//* CRUD operations
 //^ [CREATE] Register a new user
 const registerUser = catchAsync(async (req, res, next) => {
   const { firstName, lastName, email, password, role } = req.body;
@@ -70,6 +55,38 @@ const registerUser = catchAsync(async (req, res, next) => {
   });
 });
 
+//^ [GET] Read all users
+const getUsers = catchAsync(async (req, res, next) => {
+  const query = req.query;
+
+  const limit = query.limit || 10;
+  const page = query.page || 1;
+  const skip = (page - 1) * limit;
+
+  //# Get all users form DB user User model
+  const users = await User.find({}, { __V: false, password: false })
+    .limit(limit)
+    .skip(skip);
+
+  res.status(200).json(users);
+});
+
+//^ [GET] Read single user
+const getUser = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
+
+  const foundUser = await User.findById(userId);
+
+  if (!foundUser) {
+    // return res.status(404).json({ error: "not found ourse!!!" });
+    const err = AppError.create('user not found!!!', 404, HST.ERROR);
+    return next(err);
+  }
+
+  console.log('GET Single User ->', foundUser);
+  res.status(200).json({ foundUser });
+});
+
 //^ {Login}
 const loginUser = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -108,6 +125,29 @@ const loginUser = catchAsync(async (req, res, next) => {
   }
 });
 
+//^ [PATCH] Update user
+// Update User Function
+const updateUser = catchAsync(async (req, res, next) => {
+  let { userId } = req.params;
+  // console.log('User ID:', userId);
+
+  // Ensure that req.body contains the correct update fields
+  // console.log('Request Body:', req.body);
+
+  const foundUser = await User.findByIdAndUpdate(userId, req.body, {
+    new: true,
+  });
+
+  // console.log('Found User:', foundUser);
+
+  if (!foundUser) {
+    const err = AppError.create('User not found!!', 404, HST.ERROR);
+    return next(err);
+  }
+
+  res.status(200).json({ message: 'Updated course', data: foundUser });
+});
+
 //^ [DELETE] Delete user
 const deleteUser = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
@@ -126,7 +166,9 @@ const deleteUser = catchAsync(async (req, res, next) => {
 
 module.exports = {
   getUsers,
+  getUser,
   registerUser,
   loginUser,
+  updateUser,
   deleteUser,
 };

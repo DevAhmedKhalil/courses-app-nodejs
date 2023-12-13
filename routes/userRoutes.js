@@ -4,6 +4,9 @@ const userController = require('../controllers/userControllers');
 const verifyToken = require('../middlewares/verifyToken');
 const appError = require('../utils/appError');
 const multer = require('multer');
+const allowedTo = require('../middlewares/allowedTo');
+const userRoles = require('../utils/userRoles');
+const { validateUpdatedCourse } = require('../middlewares/validationSchema');
 
 const diskStorage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -28,18 +31,33 @@ const fileFilter = (req, file, callback) => {
 
 const upload = multer({ storage: diskStorage, fileFilter: fileFilter });
 
-// Get all users ==> /api/users/
-router.route('/').get(verifyToken, userController.getUsers);
+//# GET all users
+router
+  .route('/')
+  .get(verifyToken, allowedTo(userRoles.ADMIN), userController.getUsers);
 
-// Register CREATE new user ==> /api/users/register
+//# GET, UPDATE, DELETE By => ID
+router
+  .route('/:userId')
+  .get(verifyToken, allowedTo(userRoles.ADMIN), userController.getUser)
+  .patch(
+    validateUpdatedCourse,
+    verifyToken,
+    allowedTo(userRoles.ADMIN, userRoles.USER),
+    userController.updateUser
+  )
+  .delete(
+    verifyToken,
+    allowedTo(userRoles.ADMIN, userRoles.USER),
+    userController.deleteUser
+  );
+
+//# Register
 router
   .route('/register')
   .post(upload.single('avatar'), userController.registerUser);
 
-// Delete user ==> /api/users/:userId
-router.route('/:userId').delete(userController.deleteUser);
-
-// Login user ==> /api/users/login
+//# Login
 router.route('/login').post(userController.loginUser);
 
 module.exports = router;
