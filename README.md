@@ -8,27 +8,10 @@
 
 This project presents a course management system with functionalities to Create, Read, Update, and Delete (CRUD) courses. now uses MongoDB, providing more effective data storage and retrieval.
 
-### New Features
+## Quick Links 
 
-1. **User Management:**
-
-   - The addition of `userControllers` provides functionalities for managing users within the application.
-   - Users can be created, read, and deleted with corresponding API endpoints.
-
-2. **User Registration:**
-
-   - The `registerUser` function allows the registration of a new user by providing details such as first name, last name, email, password, and role.
-   - The user's password is securely hashed before being stored in the database.
-   - JWT token is generated upon successful registration.
-
-3. **User Login:**
-
-   - The `loginUser` function facilitates user login by validating the provided email and password.
-   - Upon successful login, a JWT token is generated for authentication.
-
-4. **User Deletion:**
-   - The `deleteUser` function enables the deletion of a user by providing the user's ID.
-   - The deleted user is removed from the database.
+- [Live Deployment](https://courses-app-1s9u.onrender.com/)
+- [API Routes in Postman](https://documenter.getpostman.com/view/27901441/2s9YkjC4kM)
 
 ## Roles and Permissions
 
